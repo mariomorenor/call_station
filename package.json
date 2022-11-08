@@ -1,0 +1,54 @@
+{
+  "name": "call_station",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/electron/background.js",
+  "description": "Programa",
+  "author": {
+    "name": "Jonathan Moreno",
+    "email": "mario_morenor@hotmail.com"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "wait-on tcp:5173 && electron . ",
+    "electron:dev": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"npm run electron\" ",
+    "electron:build": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "vue": "^3.2.41",
+    "vue-router": "^4.1.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.2.0",
+    "concurrently": "^7.5.0",
+    "cross-env": "^7.0.3",
+    "electron": "^21.2.2",
+    "electron-builder": "^23.6.0",
+    "electron-devtools-installer": "^3.2.0",
+    "vite": "^3.2.3",
+    "wait-on": "^6.0.1"
+  },
+  "build": {
+    "appId": "com.call.station",
+    "productName": "CallStation",
+    "copyright": "Copyright © 2022 ${author}",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "win": {
+      "icon": "src/electron/assets/call_station.png",
+      "target":"portable"
+    },
+    "files": [
+      "dist/**/*",
+      "src/electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist_electron"
+    }
+  }
+}
