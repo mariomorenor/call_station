@@ -12,16 +12,21 @@ export default {
   sockets: {
     connect() {
       this.store.status = true
-      this.$socket.emit("nuevo_manager", this.store.config.client);
-      this.$socket.emit("clientes_conectados", { department: this.store.config.client.department }, (clientes) => {
-        console.log(clientes);
+      this.$socket.emit("nuevo", {
+        ...this.store.config.client,
+      });
+      this.$socket.emit("clientes_conectados", "", (response) => {
+        console.log(response);
       })
     },
     disconnect() {
       this.store.status = false
     },
-    new_client(client) {
-      this.store.clients.push(client)
+    clientes_en_espera(clients) {
+      console.log(clients);
+    },
+    nuevo_cliente_en_espera(client) {
+      console.log(client);
     }
   }
 }
