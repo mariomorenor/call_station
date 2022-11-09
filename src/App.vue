@@ -17,16 +17,20 @@ export default {
       });
       this.$socket.emit("clientes_conectados", "", (response) => {
         console.log(response);
+        this.store.clients = [...response]
       })
     },
     disconnect() {
       this.store.status = false
     },
     clientes_en_espera(clients) {
-      console.log(clients);
+      this.store.clients = clients
     },
     nuevo_cliente_en_espera(client) {
-      console.log(client);
+      this.store.clients.push(client)
+    },
+    socket_desconectado(socket) {
+      this.store.clients = this.store.clients.filter(client => client.socket_id != socket.socket_id)
     }
   }
 }

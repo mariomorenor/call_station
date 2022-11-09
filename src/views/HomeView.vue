@@ -8,7 +8,20 @@
   <hr>
   <main>
     <div class="card" v-for="client in clients" :key="client.id">
-      posi
+      <table>
+        <tr>
+          <td>Nombre:</td>
+          <td>{{client.name}}</td>
+        </tr>
+        <tr>
+          <td>Cédula:</td>
+          <td>{{client.identity}}</td>
+        </tr>
+        <tr>
+          <td>Carrera:</td>
+          <td>{{client.career}}</td>
+        </tr>
+      </table>
     </div>
   </main>
   <footer>
