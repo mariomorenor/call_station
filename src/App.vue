@@ -30,6 +30,7 @@ export default {
       this.store.clients.push(client)
     },
     socket_desconectado(socket) {
+      console.log(socket);
       this.store.clients = this.store.clients.filter(client => client.socket_id != socket.socket_id)
     }
   }
