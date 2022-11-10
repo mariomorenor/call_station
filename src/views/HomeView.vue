@@ -11,17 +11,20 @@
       <table>
         <tr>
           <td>Nombre:</td>
-          <td>{{client.name}}</td>
+          <td>{{ client.name }}</td>
         </tr>
         <tr>
           <td>Cédula:</td>
-          <td>{{client.identity}}</td>
+          <td>{{ client.identity }}</td>
         </tr>
         <tr>
           <td>Carrera:</td>
-          <td>{{client.career}}</td>
+          <td>{{ client.career }}</td>
         </tr>
       </table>
+      <button @click="connectClient(client)">Conectar</button>
+      <button>Pausar</button>
+      <button @click="removeClient(client)">Remover</button>
     </div>
   </main>
   <footer>
@@ -35,13 +38,42 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
+import { mapWritableState } from 'pinia';
 import { useStore } from '../store';
 
 export default {
   name: "HomeView",
   computed: {
-    ...mapState(useStore, ["config", "status","clients"])
+    ...mapWritableState(useStore, ["config", "status", "clients", "call", "peer"])
+  },
+  methods: {
+    connectClient(client) {
+      console.log(client);
+      navigator
+        .mediaDevices
+        .getUserMedia({
+          audio: true
+        })
+        .then((stream) => {
+
+          this.call = this.peer.call(client.peer_id, stream);
+          this.call.on("stream", (remoteStream) => {
+            const audio = document.getElementById("remoteAudio")
+            audio.srcObject = remoteStream;
+            audio.play()
+          })
+        })
+    },
+    removeClient(client) {
+      dialog
+        .Show("info", "Removiendo...", "¿Está seguro de remover? No se podrá deshacer", ["Cancelar", "Aceptar"])
+        .then(result => {
+          if (result.response == 1) {
+            this.clients = this.clients.filter(c => c.socket_id != client.socket_id)
+            this.$socket.emit("remover_cliente", client);
+          }
+        })
+    }
   }
 }
 </script>
@@ -58,19 +90,21 @@ main {
   padding: 1rem;
   flex-wrap: wrap;
   overflow-y: auto;
+  align-content: flex-start;
+  justify-content: center;
   height: 70vh;
-  gap:15px;
+  gap: 15px;
+
 
   & .card {
     border: 1px solid black;
     border-radius: 1rem;
     width: 14rem;
-    height: 6rem;
+    height: fit-content;
     transition: all .3s;
     padding: 1rem;
 
     &:hover {
-      cursor: pointer;
       box-shadow: 1px 1px 15px rgb(132, 132, 132);
     }
   }

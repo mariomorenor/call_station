@@ -37,9 +37,12 @@ export default {
 </script>
 
 <template>
+  <video id="remoteAudio"></video>
   <router-view></router-view>
 </template>
 
 <style scoped>
-
+video {
+  position: absolute;
+}
 </style>

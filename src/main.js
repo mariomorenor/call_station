@@ -8,6 +8,9 @@ import { useStore } from "./store";
 const app = createApp(App);
 const pinia = createPinia();
 
+import { Peer } from "peerjs";
+
+
 ipcRenderer.get("config").then((config) => {
   const server = config.server;
 
@@ -22,5 +25,6 @@ ipcRenderer.get("config").then((config) => {
 
   const store = useStore();
   store.config = config;
+  store.peer = new Peer();
   app.mount("#app");
 });

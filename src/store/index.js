@@ -14,5 +14,7 @@ export const useStore = defineStore("main", {
     },
     status: false,
     clients: [],
+    peer:{},
+    call:{}
   }),
 });

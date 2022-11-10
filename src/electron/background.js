@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const isDevelopment = process.env.NODE_ENV === "development" ? true : false;
 const {
@@ -42,13 +42,14 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(`${path.resolve(__dirname, "dist/index.html")}`);
   }
+  return mainWindow;
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow();
+  const mainWindow = createWindow();
 
   app.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the
@@ -59,6 +60,17 @@ app.whenReady().then(() => {
   ipcMain.handle("getData", async (event, data) => {
     return store.get(data.key);
   });
+
+  ipcMain.handle("showDialog", async (event, data) => {
+    return dialog.showMessageBox(mainWindow, {
+      type: data.type,
+      title: data.title,
+      message: data.message,
+      buttons: data.buttons,
+      noLink: true
+    });
+  })
+
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
